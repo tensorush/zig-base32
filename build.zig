@@ -7,6 +7,8 @@ pub fn build(b: *std.Build) void {
     _ = b.addModule("Base32", .{ .source_file = root_source_file });
 
     // Library
+    const lib_step = b.step("lib", "Install library");
+
     const lib = b.addStaticLibrary(.{
         .name = "base32",
         .root_source_file = root_source_file,
@@ -17,7 +19,6 @@ pub fn build(b: *std.Build) void {
     lib.emit_docs = .emit;
 
     const lib_install = b.addInstallArtifact(lib);
-    const lib_step = b.step("lib", "Install library");
     lib_step.dependOn(&lib_install.step);
     b.default_step.dependOn(lib_step);
 
@@ -31,21 +32,23 @@ pub fn build(b: *std.Build) void {
     tests_step.dependOn(&tests_run.step);
     b.default_step.dependOn(tests_step);
 
-    // Code coverage
+    // Code coverage report
+    const cov_step = b.step("cov", "Generate code coverage report");
+
     const cov_run = b.addSystemCommand(&.{ "kcov", "--clean", "--include-pattern=src/", "kcov-output" });
     cov_run.addArtifactArg(tests);
 
-    const cov_step = b.step("cov", "Generate code coverage report");
     cov_step.dependOn(&cov_run.step);
     b.default_step.dependOn(cov_step);
 
     // Lints
+    const lints_step = b.step("lint", "Run lints");
+
     const lints = b.addFmt(.{
         .paths = &[_][]const u8{ "src", "build.zig" },
         .check = true,
     });
 
-    const lints_step = b.step("lint", "Run lints");
     lints_step.dependOn(&lints.step);
     b.default_step.dependOn(lints_step);
 }
