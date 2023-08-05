@@ -41,7 +41,7 @@
 
     ```zig
     const base32 = b.dependency("base32", .{});
-    exe.addModule("base32", base32.module("base32"));
+    exe.addModule("Base32", base32.module("Base32"));
     ```
 
     </details>
