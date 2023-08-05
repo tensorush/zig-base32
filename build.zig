@@ -24,7 +24,7 @@ pub fn build(b: *std.Build) void {
     // Docs
     const docs_step = b.step("docs", "Emit docs");
 
-    const docs_install = b.installDirectory(.{
+    const docs_install = b.addInstallDirectory(.{
         .source_dir = lib.getEmittedDocs(),
         .install_dir = .prefix,
         .install_subdir = "docs",
