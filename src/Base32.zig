@@ -269,43 +269,43 @@ pub fn decode(self: Base32, dest: []u8, source: []const u8) ![]const u8 {
     return dest[0..n];
 }
 
-inline fn dec2(dst: []u8, dst_idx: usize, dbuf: []u8) void {
+fn dec2(dst: []u8, dst_idx: usize, dbuf: []u8) void {
     dst[dst_idx] = dbuf[0] << 3 | dbuf[1] >> 2;
 }
 
-inline fn dec4(dst: []u8, dst_idx: usize, dbuf: []u8) void {
+fn dec4(dst: []u8, dst_idx: usize, dbuf: []u8) void {
     dst[dst_idx + 1] = dbuf[1] << 6 | dbuf[2] << 1 | dbuf[3] >> 4;
 }
 
-inline fn dec5(dst: []u8, dst_idx: usize, dbuf: []u8) void {
+fn dec5(dst: []u8, dst_idx: usize, dbuf: []u8) void {
     dst[dst_idx + 2] = dbuf[3] << 4 | dbuf[4] >> 1;
 }
 
-inline fn dec7(dst: []u8, dst_idx: usize, dbuf: []u8) void {
+fn dec7(dst: []u8, dst_idx: usize, dbuf: []u8) void {
     dst[dst_idx + 3] = dbuf[4] << 7 | dbuf[5] << 2 | dbuf[6] >> 3;
 }
 
-inline fn dec8(dst: []u8, dst_idx: usize, dbuf: []u8) void {
+fn dec8(dst: []u8, dst_idx: usize, dbuf: []u8) void {
     dst[dst_idx + 4] = dbuf[6] << 5 | dbuf[7];
 }
 
-inline fn case1(b: []u8, src: []const u8) void {
+fn case1(b: []u8, src: []const u8) void {
     b[1] |= (src[0] << 2) & 0x1F;
     b[0] = src[0] >> 3;
 }
 
-inline fn case2(b: []u8, src: []const u8) void {
+fn case2(b: []u8, src: []const u8) void {
     b[3] |= (src[1] << 4) & 0x1F;
     b[2] = (src[1] >> 1) & 0x1F;
     b[1] = (src[1] >> 6) & 0x1F;
 }
 
-inline fn case3(b: []u8, src: []const u8) void {
+fn case3(b: []u8, src: []const u8) void {
     b[4] |= (src[2] << 1) & 0x1F;
     b[3] = (src[2] >> 4) & 0x1F;
 }
 
-inline fn case4(b: []u8, src: []const u8) void {
+fn case4(b: []u8, src: []const u8) void {
     b[6] |= (src[3] << 3) & 0x1F;
     b[5] = (src[3] >> 2) & 0x1F;
     b[4] = src[3] >> 7;
