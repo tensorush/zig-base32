@@ -13,14 +13,25 @@ pub fn build(b: *std.Build) void {
         .name = "base32",
         .root_source_file = root_source_file,
         .target = b.standardTargetOptions(.{}),
-        .optimize = .ReleaseSafe,
-        .version = .{ .major = 1, .minor = 0, .patch = 0 },
+        .optimize = b.standardOptimizeOption(.{}),
+        .version = .{ .major = 1, .minor = 1, .patch = 0 },
     });
-    lib.emit_docs = .emit;
 
-    const lib_install = b.addInstallArtifact(lib);
+    const lib_install = b.addInstallArtifact(lib, .{});
     lib_step.dependOn(&lib_install.step);
     b.default_step.dependOn(lib_step);
+
+    // Docs
+    const docs_step = b.step("docs", "Emit docs");
+
+    const docs_install = b.installDirectory(.{
+        .source_dir = lib.getEmittedDocs(),
+        .install_dir = .prefix,
+        .install_subdir = "docs",
+    });
+
+    docs_step.dependOn(&docs_install.step);
+    b.default_step.dependOn(docs_step);
 
     // Tests
     const tests = b.addTest(.{
@@ -45,7 +56,7 @@ pub fn build(b: *std.Build) void {
     const lints_step = b.step("lint", "Run lints");
 
     const lints = b.addFmt(.{
-        .paths = &[_][]const u8{ "src", "build.zig" },
+        .paths = &.{ "src", "build.zig" },
         .check = true,
     });
 
