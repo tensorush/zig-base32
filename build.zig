@@ -1,10 +1,10 @@
 const std = @import("std");
 
 pub fn build(b: *std.Build) void {
-    const root_source_file = std.Build.FileSource.relative("src/Base32.zig");
+    const root_source_file = std.Build.LazyPath.relative("src/Base32.zig");
 
     // Module
-    _ = b.addModule("Base32", .{ .source_file = root_source_file });
+    _ = b.addModule("Base32", .{ .root_source_file = root_source_file });
 
     // Library
     const lib_step = b.step("lib", "Install library");

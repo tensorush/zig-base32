@@ -171,10 +171,10 @@ pub fn decode(self: Base32, dest: []u8, source: []const u8) ![]const u8 {
         }
     }
 
-    var dst = dest;
+    const dst = dest;
     var src = source;
     var n: usize = 0;
-    var orig_src_len = src.len;
+    const orig_src_len = src.len;
     var dst_idx: usize = 0;
     var is_end: bool = false;
     while (src.len > 0 and !is_end) {
@@ -342,7 +342,7 @@ test "encode/decode" {
         try std.testing.expectEqualSlices(u8, t.encoded, encoded);
 
         const dec_len = STD_ENC.decodeLen(t.encoded.len);
-        var decoded = try STD_ENC.decode(buf[0..dec_len], t.encoded);
+        const decoded = try STD_ENC.decode(buf[0..dec_len], t.encoded);
         try std.testing.expectEqualSlices(u8, t.decoded, decoded);
     }
 }
@@ -356,7 +356,7 @@ test "encode/decode without padding" {
         const encoded_end = std.mem.indexOfScalar(u8, t.encoded, '=') orelse t.encoded.len;
         try std.testing.expectEqualSlices(u8, t.encoded[0..encoded_end], encoded);
 
-        var decoded = try STD_NO_PAD_ENC.decode(buf[0..dec_len], t.encoded[0..encoded_end]);
+        const decoded = try STD_NO_PAD_ENC.decode(buf[0..dec_len], t.encoded[0..encoded_end]);
         try std.testing.expectEqualSlices(u8, t.decoded, decoded);
     }
 }
